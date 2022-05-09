@@ -3,7 +3,7 @@ name: Upload Binaries and Docker Image
 on:
   push:
     branches:
-      - feat/assess-rocksdby
+      - feat/assess-rocksdb
 
 
 jobs:
