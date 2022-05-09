@@ -51,6 +51,16 @@ jobs:
 
       - name: Build and sign binaries
         run: |
+          sudo apt install -y libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+          git clone https://github.com/facebook/rocksdb.git
+          git checkout v6.29.3
+          export CXXFLAGS='-Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess'
+          sudo make shared_lib
+          sudo make install-shared INSTALL_PATH=/usr
+          sudo echo 'export LD_LIBRARY_PATH=/usr/local/lib' >> $HOME/.bashrc
+
+      - name: Build and sign binaries
+        run: |
           make build
 
 
