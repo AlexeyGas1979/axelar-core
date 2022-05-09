@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: '0'
-          ref: ${{ github.event.inputs.tag }}
+          ref: v0.17.0
           submodules: recursive
 
       - name: Setup Golang with cache
@@ -63,5 +63,11 @@ jobs:
       - name: Build and sign binaries
         run: |
           make build
+
+      - name: Upload binaries to custom S3
+        env:
+          S3_PATH: s3://axelar-rocksdb
+        run: |
+          aws s3 cp ./bin ${S3_PATH}/ --recursive
 
 
