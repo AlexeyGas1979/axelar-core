@@ -49,10 +49,11 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Build and sign binaries
+      - name: Init rocksdb
         run: |
           sudo apt install -y libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
           git clone https://github.com/facebook/rocksdb.git
+          cd rocksdb
           git checkout v6.29.3
           export CXXFLAGS='-Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess'
           sudo make shared_lib
