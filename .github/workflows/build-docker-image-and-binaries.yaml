@@ -45,6 +45,7 @@ jobs:
             git clone https://github.com/axelarnetwork/axelarate-community.git
             cd axelarate-community
             # Create necessary folders and get config files
+            ulimit -n 16384
             yes | ./scripts/setup-node.sh -n testnet-2 -a v0.17.0
             # That folder is missing
             mkdir -p ~/.axelar_testnet-2/data/application.db
@@ -52,8 +53,6 @@ jobs:
             sed -i 's/db_backend = "goleveldb"/db_backend = "rocksdb"/' ~/.axelar_testnet-2/config/config.toml 
             # Display config.toml file
             cat ~/.axelar_testnet-2/config/config.toml
-            # set ulimit
-            ulimit -n 16384
             # Sync the node 
             cd ~/.axelar_testnet-2/bin/
             ./axelard start [moniker] --home ~/.axelar_testnet-2 >> ~/.axelar_testnet-2/logs/axelard.log 2>&1 &
