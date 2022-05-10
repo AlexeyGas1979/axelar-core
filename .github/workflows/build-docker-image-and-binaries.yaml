@@ -29,29 +29,45 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Sync node with rocksdb
-        run: |
-          # Copy the binary built previously with rocksdb support
-          mkdir -p ~/.axelar_testnet-2/bin/
-          cd ~/.axelar_testnet-2/bin/
-          wget https://s3.console.aws.amazon.com/s3/buckets/axelar-rocksdb/axelard
-          mv axelard axelard-v0.17.0
-          chmod +x axelard-v0.17.0
-          cd
-          git clone https://github.com/axelarnetwork/axelarate-community.git
-          cd axelarate-community
-          # Create necessary folders and get config files
-          yes | ./scripts/setup-node.sh -n testnet-2 -a v0.17.0
-          # That folder is missing
-          mkdir -p ~/.axelar_testnet-2/data/application.db
-          # We need to update the DB backend in config.toml file
-          sed -i 's/db_backend = "goleveldb"/db_backend = "rocksdb"/' ~/.axelar_testnet-2/config/config.toml 
-          # Display config.toml file
-          cat ~/.axelar_testnet-2/config/config.toml
-          # set ulimit
-          ulimit -n 16384
-          # Sync the node 
-          cd ~/.axelar_testnet-2/bin/
-          ./axelard start [moniker] --home ~/.axelar_testnet-2 >> ~/.axelar_testnet-2/logs/axelard.log 2>&1 &
-          sleep 120
-          cat ~/.axelar_testnet-2/logs/axelard.log
+      - name: Execute SSH commmands on remote server
+        uses: JimCronqvist/action-ssh@master
+        with:
+          hosts: ${{ secrets.ROCKSDB_HOST }}
+          privateKey: ${{ secrets.ROCKSDB_SSH_PRIVATE_KEY }}
+          command: |
+            # Copy the binary built previously with rocksdb support
+            mkdir -p ~/.axelar_testnet-2/bin/
+            cd ~/.axelar_testnet-2/bin/
+            wget https://s3.console.aws.amazon.com/s3/buckets/axelar-rocksdb/axelard
+            mv axelard axelard-v0.17.0
+            chmod +x axelard-v0.17.0
+            cd
+            git clone https://github.com/axelarnetwork/axelarate-community.git
+            cd axelarate-community
+            # Create necessary folders and get config files
+            yes | ./scripts/setup-node.sh -n testnet-2 -a v0.17.0
+            # That folder is missing
+            mkdir -p ~/.axelar_testnet-2/data/application.db
+            # We need to update the DB backend in config.toml file
+            sed -i 's/db_backend = "goleveldb"/db_backend = "rocksdb"/' ~/.axelar_testnet-2/config/config.toml 
+            # Display config.toml file
+            cat ~/.axelar_testnet-2/config/config.toml
+            # set ulimit
+            ulimit -n 16384
+            # Sync the node 
+            cd ~/.axelar_testnet-2/bin/
+            ./axelard start [moniker] --home ~/.axelar_testnet-2 >> ~/.axelar_testnet-2/logs/axelard.log 2>&1 &
+
+
+
+
+
+
+
+
+
+
+
+
+
+
