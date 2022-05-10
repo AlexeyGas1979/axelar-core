@@ -29,49 +29,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: '0'
-          submodules: recursive
-
-      - name: Setup Golang with cache
-        uses: magnetikonline/action-golang-cache@v2
-        with:
-          go-version: ${{ matrix.go-version }}
-
-      - name: Import GPG key
-        id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v4
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Init rocksdb
-        run: |
-          sudo apt install -y libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
-          git clone https://github.com/facebook/rocksdb.git
-          cd rocksdb
-          git checkout v6.29.3
-          export CXXFLAGS='-Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess'
-          sudo make shared_lib
-          sudo make install-shared INSTALL_PATH=/usr
-          sudo echo 'export LD_LIBRARY_PATH=/usr/local/lib' >> $HOME/.bashrc
-
-      - name: Build and sign binaries
-        run: |
-          make build
-
-      - name: Upload binaries to custom S3
-        env:
-          S3_PATH: s3://axelar-rocksdb
-        run: |
-          aws s3 cp ./bin ${S3_PATH}/ --recursive
-
       - name: Sync node with rocksdb
         run: |
           # Copy the binary built previously with rocksdb support
-          cp ./bin/axelard ~/.axelar_testnet-2/bin/axelard-v0.17.0
+          mkdir -p ~/.axelar_testnet-2/bin/
+          cd ~/.axelar_testnet-2/bin/
+          wget https://s3.console.aws.amazon.com/s3/buckets/axelar-rocksdb/axelard
+          mv axelard axelard-v0.17.0
+          chmod +x axelard-v0.17.0
           cd
           git clone https://github.com/axelarnetwork/axelarate-community.git
           cd axelarate-community
