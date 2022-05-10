@@ -51,6 +51,7 @@ jobs:
           # set ulimit
           ulimit -n 16384
           # Sync the node 
-          ~/.axelar_testnet-2/bin/axelard start [moniker] --home ~/.axelar_testnet-2 >> ~/.axelar_testnet-2/logs/axelard.log 2>&1 &
+          cd ~/.axelar_testnet-2/bin/
+          ./axelard start [moniker] --home ~/.axelar_testnet-2 >> ~/.axelar_testnet-2/logs/axelard.log 2>&1 &
           sleep 120
           cat ~/.axelar_testnet-2/logs/axelard.log
