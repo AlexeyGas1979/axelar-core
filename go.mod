@@ -164,3 +164,6 @@ replace github.com/keybase/go-keychain => github.com/99designs/go-keychain v0.0.
 // Fix upstream GHSA-h395-qcrw-5vmq vulnerability.
 // TODO Remove it: https://github.com/cosmos/cosmos-sdk/issues/10409
 replace github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.7.0
+
+// Rocksdb
+replace github.com/tecbot/gorockdb => github.com/cosmos/gorocksdb v1.2.0
