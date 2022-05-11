@@ -67,7 +67,7 @@ jobs:
             ulimit -n 16384
             yes | ./scripts/setup-node.sh -n testnet-2 -a v0.17.0
             # That folder is missing
-            mkdir -p ~/.axelar_testnet-2/data/application.db
+            mkdir -p ~/.axelar_testnet-2/data/snapshots/metadata.db
             # We need to update the DB backend in config.toml file
             sed -i 's/db_backend = "goleveldb"/db_backend = "rocksdb"/' ~/.axelar_testnet-2/config/config.toml 
             # Display config.toml file
