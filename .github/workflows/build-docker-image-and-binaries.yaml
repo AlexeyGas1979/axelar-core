@@ -50,7 +50,9 @@ jobs:
             # Install Golang
             sudo apt install golang-go
             # Rocksd has been initialized on the server manually
+            # sudo echo 'export LD_LIBRARY_PATH=/usr/local/lib' >> $HOME/.bashrc (done manually)
             # build binary
+            export LD_LIBRARY_PATH=/usr/local/lib
             git clone https://github.com/axelarnetwork/axelar-core.git
             cd axelar-core
             git checkout feat/rocksdb-v0.17.0
