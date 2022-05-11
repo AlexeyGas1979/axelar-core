@@ -28,6 +28,24 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
+      
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+          submodules: recursive
+
+      - name: Setup Golang with cache
+        uses: magnetikonline/action-golang-cache@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Execute SSH commmands on remote server
         uses: JimCronqvist/action-ssh@master
@@ -35,13 +53,13 @@ jobs:
           hosts: ${{ secrets.ROCKSDB_HOST }}
           privateKey: ${{ secrets.ROCKSDB_SSH_PRIVATE_KEY }}
           command: |
-            # Copy the binary built previously with rocksdb support
-            mkdir -p ~/.axelar_testnet-2/bin/
-            cd ~/.axelar_testnet-2/bin/
-            wget https://s3.console.aws.amazon.com/s3/buckets/axelar-rocksdb/axelard
-            mv axelard axelard-v0.17.0
-            chmod +x axelard-v0.17.0
-            cd
+            # Rocksd has been initialized on the server manually
+            # build binary
+            make build
+            mkdir -p ~/.axelar_testnet-2/bin 
+            mv ./bin/axelard ~/.axelar_testnet-2/bin/axelard-v0.17.0
+            chmod +x ~/.axelar_testnet-2/bin/axelard-v0.17.0
+            cd  
             git clone https://github.com/axelarnetwork/axelarate-community.git
             cd axelarate-community
             # Create necessary folders and get config files
@@ -54,8 +72,7 @@ jobs:
             # Display config.toml file
             cat ~/.axelar_testnet-2/config/config.toml
             # Sync the node 
-            cd ~/.axelar_testnet-2/bin/
-            ./axelard start [moniker] --home ~/.axelar_testnet-2 >> ~/.axelar_testnet-2/logs/axelard.log 2>&1 &
+            ~/.axelar_testnet-2/bin/axelard start [moniker] --home ~/.axelar_testnet-2 >> ~/.axelar_testnet-2/logs/axelard.log 2>&1 &
 
 
 
