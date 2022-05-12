@@ -12,6 +12,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=axelar \
 	-X github.com/cosmos/cosmos-sdk/version.AppName=axelard \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(BUILD_TAGS)" \
+	-X github.com/cosmos/cosmos-sdk/types.DBBackend=rocksdb \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT)
 
 BUILD_FLAGS := -tags "$(BUILD_TAGS)" -ldflags '$(ldflags)'

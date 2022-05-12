@@ -172,3 +172,6 @@ replace github.com/zondax/hid => github.com/zondax/hid v0.9.1-0.20220302062450-5
 
 // Update btcec explicitly since btcd hasn't created a new release yet
 replace github.com/btcsuite/btcd/btcec/v2 => github.com/btcsuite/btcd/btcec/v2 v2.2.0
+
+// Rocksdb
+replace github.com/tecbot/gorockdb => github.com/cosmos/gorocksdb v1.2.0
