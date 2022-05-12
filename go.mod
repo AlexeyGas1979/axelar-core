@@ -1,6 +1,6 @@
 module github.com/axelarnetwork/axelar-core
 
-go 1.18
+go 1.17
 
 require (
 	github.com/armon/go-metrics v0.3.11
