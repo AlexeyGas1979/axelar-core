@@ -3,7 +3,7 @@ PACKAGES=$(shell go list ./... | grep -v '/simulation')
 VERSION := $(shell echo $(shell git describe --tags) | sed 's/^v//')
 COMMIT := $(shell git log -1 --format='%H')
 
-BUILD_TAGS := ledger
+BUILD_TAGS := ledger gcc rocksdb
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
 HTTPS_GIT := https://github.com/axelarnetowrk/axelar-core.git
@@ -12,6 +12,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=axelar \
 	-X github.com/cosmos/cosmos-sdk/version.AppName=axelard \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(BUILD_TAGS)" \
+	-X github.com/cosmos/cosmos-sdk/types.DBBackend=rocksdb \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT)
 
 BUILD_FLAGS := -tags "$(BUILD_TAGS)" -ldflags '$(ldflags)'
