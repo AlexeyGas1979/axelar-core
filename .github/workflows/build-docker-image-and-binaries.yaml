@@ -3,7 +3,7 @@ name: Upload Binaries and Docker Image
 on:
   push:
     branches:
-      - feat/rocksdb-v0.17.0
+      - feat/rocksdb-v0.17.0-main
 
 jobs:
   release-binaries:
@@ -55,25 +55,25 @@ jobs:
             export LD_LIBRARY_PATH=/usr/local/lib
             git clone https://github.com/axelarnetwork/axelar-core.git
             cd axelar-core
-            git checkout feat/rocksdb-v0.17.0
+            git checkout feat/rocksdb-v0.17.0-main
             make build
-            mkdir -p ~/.axelar_testnet-2/bin 
-            mv ./bin/axelard ~/.axelar_testnet-2/bin/axelard-v0.17.0
-            chmod +x ~/.axelar_testnet-2/bin/axelard-v0.17.0
+            mkdir -p ~/.axelar/bin 
+            mv ./bin/axelard ~/.axelar/bin/axelard-v0.17.0
+            chmod +x ~/.axelar/bin/axelard-v0.17.0
             cd  
             git clone https://github.com/axelarnetwork/axelarate-community.git
             cd axelarate-community
             # Create necessary folders and get config files
             ulimit -n 16384
-            yes | ./scripts/setup-node.sh -n testnet-2 -a v0.17.0
+            yes | ./scripts/setup-node.sh -n mainnet -a v0.17.0
             # That folder is missing
-            mkdir -p ~/.axelar_testnet-2/data/snapshots/metadata.db
+            mkdir -p ~/.axelar/data/snapshots/metadata.db
             # We need to update the DB backend in config.toml file
-            sed -i 's/db_backend = "goleveldb"/db_backend = "rocksdb"/' ~/.axelar_testnet-2/config/config.toml 
+            sed -i 's/db_backend = "goleveldb"/db_backend = "rocksdb"/' ~/.axelar/config/config.toml 
             # Display config.toml file
-            cat ~/.axelar_testnet-2/config/config.toml
+            cat ~/.axelar/config/config.toml
             # Sync the node 
-            ~/.axelar_testnet-2/bin/axelard start [moniker] --home ~/.axelar_testnet-2 >> ~/.axelar_testnet-2/logs/axelard.log 2>&1 &
+            ~/.axelar/bin/axelard start [moniker] --home ~/.axelar >> ~/.axelar/logs/axelard.log 2>&1 &
 
 
 
