@@ -55,10 +55,10 @@ jobs:
             export LD_LIBRARY_PATH=/usr/local/lib
             git clone https://github.com/axelarnetwork/axelar-core.git
             cd axelar-core
-            git checkout feat/rocksdb-v0.10.7-main
+            git checkout feat/rocksdb-v0.10.7
             make build
             mkdir -p ~/.axelar/bin 
-            mv ./bin/axelard ~/.axelar/bin/axelard-v0.17.0
+            mv ./bin/axelard ~/.axelar/bin/axelard-v0.10.7
             chmod +x ~/.axelar/bin/axelard-v0.10.7
             cd  
             git clone https://github.com/axelarnetwork/axelarate-community.git
