@@ -3,7 +3,7 @@ name: Upload Binaries and Docker Image
 on:
   push:
     branches:
-      - feat/rocksdb-v0.17.0-main
+      - feat/rocksdb-v0.10.7-main
 
 jobs:
   release-binaries:
@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         go-version:
-          - 1.18
+          - 1.17
         os: [ubuntu-20.04]
         arch: [amd64]
 
@@ -55,17 +55,17 @@ jobs:
             export LD_LIBRARY_PATH=/usr/local/lib
             git clone https://github.com/axelarnetwork/axelar-core.git
             cd axelar-core
-            git checkout feat/rocksdb-v0.17.0-main
+            git checkout feat/rocksdb-v0.10.7-main
             make build
             mkdir -p ~/.axelar/bin 
             mv ./bin/axelard ~/.axelar/bin/axelard-v0.17.0
-            chmod +x ~/.axelar/bin/axelard-v0.17.0
+            chmod +x ~/.axelar/bin/axelard-v0.10.7
             cd  
             git clone https://github.com/axelarnetwork/axelarate-community.git
             cd axelarate-community
             # Create necessary folders and get config files
             ulimit -n 16384
-            yes | ./scripts/setup-node.sh -n mainnet -a v0.17.0
+            yes | ./scripts/setup-node.sh -n mainnet -a v0.10.7
             # That folder is missing
             mkdir -p ~/.axelar/data/snapshots/metadata.db
             # We need to update the DB backend in config.toml file
