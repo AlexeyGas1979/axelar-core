@@ -145,7 +145,7 @@ func TestGetMigrationHandler(t *testing.T) {
 		}).
 		Run(t)
 
-	chainToCommandIDs := make(map[string][]types.CommandID)
+	chainToCommandIDs := make(map[nexus.ChainName][]types.CommandID)
 	whenTokensAreSetup.
 		When("token deployment commands are set", func() {
 			for _, chain := range evmChains {
@@ -193,7 +193,7 @@ func TestGetMigrationHandler(t *testing.T) {
 		}).
 		Run(t)
 
-	chainToNonUaxlBurnerCount := make(map[string]uint)
+	chainToNonUaxlBurnerCount := make(map[nexus.ChainName]uint)
 	whenTokensAreSetup.
 		When("some token burners are set", func() {
 			for _, chain := range evmChains {
@@ -224,7 +224,7 @@ func TestGetMigrationHandler(t *testing.T) {
 		}).
 		Run(t)
 
-	chainToUaxlConfirmedDepositCount := make(map[string]uint)
+	chainToUaxlConfirmedDepositCount := make(map[nexus.ChainName]uint)
 	whenTokensAreSetup.
 		When("some confirmed uaxl deposits exist", func() {
 			for _, chain := range evmChains {
@@ -285,9 +285,9 @@ func TestGetMigrationHandler(t *testing.T) {
 }
 
 func setPendingChain(ctx sdk.Context, k BaseKeeper, chain nexus.Chain, p types.Params) {
-	k.getBaseStore(ctx).Set(pendingChainKey.Append(utils.LowerCaseKey(chain.Name)), &types.PendingChain{Chain: chain, Params: p})
+	k.getBaseStore(ctx).Set(pendingChainKey.Append(utils.LowerCaseKey(chain.Name.String())), &types.PendingChain{Chain: chain, Params: p})
 }
 
-func hasPendingChain(ctx sdk.Context, k BaseKeeper, chainName string) bool {
-	return k.getBaseStore(ctx).Has(pendingChainKey.Append(utils.LowerCaseKey(chainName)))
+func hasPendingChain(ctx sdk.Context, k BaseKeeper, chainName nexus.ChainName) bool {
+	return k.getBaseStore(ctx).Has(pendingChainKey.Append(utils.LowerCaseKey(chainName.String())))
 }

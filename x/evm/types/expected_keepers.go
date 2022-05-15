@@ -19,8 +19,8 @@ import (
 type BaseKeeper interface {
 	Logger(ctx sdk.Context) log.Logger
 
-	HasChain(ctx sdk.Context, chain string) bool
-	ForChain(chain string) ChainKeeper
+	HasChain(ctx sdk.Context, chain nexus.ChainName) bool
+	ForChain(chain nexus.ChainName) ChainKeeper
 
 	InitGenesis(ctx sdk.Context, state GenesisState)
 	ExportGenesis(ctx sdk.Context) GenesisState
@@ -115,7 +115,7 @@ type Nexus interface {
 	ArchivePendingTransfer(ctx sdk.Context, transfer nexus.CrossChainTransfer)
 	SetChain(ctx sdk.Context, chain nexus.Chain)
 	GetChains(ctx sdk.Context) []nexus.Chain
-	GetChain(ctx sdk.Context, chain string) (nexus.Chain, bool)
+	GetChain(ctx sdk.Context, chain nexus.ChainName) (nexus.Chain, bool)
 	IsAssetRegistered(ctx sdk.Context, chain nexus.Chain, denom string) bool
 	RegisterAsset(ctx sdk.Context, chain nexus.Chain, asset nexus.Asset) error
 	GetChainMaintainers(ctx sdk.Context, chain nexus.Chain) []sdk.ValAddress

@@ -158,8 +158,8 @@ func (s msgServer) Link(c context.Context, req *types.LinkRequest) (*types.LinkR
 			sdk.NewAttribute(types.AttributeKeyMasterKeyID, string(masterKey.ID)),
 			sdk.NewAttribute(types.AttributeKeySecondaryKeyID, string(secondaryKey.ID)),
 			sdk.NewAttribute(types.AttributeKeyDepositAddress, depositAddressInfo.Address),
-			sdk.NewAttribute(types.AttributeKeySourceChain, exported.Bitcoin.Name),
-			sdk.NewAttribute(types.AttributeKeyDestinationChain, recipient.Chain.Name),
+			sdk.NewAttribute(types.AttributeKeySourceChain, exported.Bitcoin.Name.String()),
+			sdk.NewAttribute(types.AttributeKeyDestinationChain, recipient.Chain.Name.String()),
 			sdk.NewAttribute(types.AttributeKeyDestinationAddress, recipient.Address),
 			sdk.NewAttribute(types.AttributeKeyAsset, types.Satoshi),
 		),
@@ -206,7 +206,7 @@ func (s msgServer) ConfirmOutpoint(c context.Context, req *types.ConfirmOutpoint
 		vote.ExpiryAt(ctx.BlockHeight()+s.BTCKeeper.GetRevoteLockingPeriod(ctx)),
 		vote.Threshold(s.GetVotingThreshold(ctx)),
 		vote.MinVoterCount(s.GetMinVoterCount(ctx)),
-		vote.RewardPool(exported.Bitcoin.Name),
+		vote.RewardPool(exported.Bitcoin.Name.String()),
 	); err != nil {
 		return nil, err
 	}
@@ -360,7 +360,7 @@ func (s msgServer) VoteConfirmOutpoint(c context.Context, req *types.VoteConfirm
 			return nil, fmt.Errorf("cross-chain sender has no recipient")
 		}
 		event = event.AppendAttributes(
-			sdk.NewAttribute(types.AttributeKeyDestinationChain, recipient.Chain.Name),
+			sdk.NewAttribute(types.AttributeKeyDestinationChain, recipient.Chain.Name.String()),
 			sdk.NewAttribute(types.AttributeKeyDestinationAddress, recipient.Address),
 		)
 

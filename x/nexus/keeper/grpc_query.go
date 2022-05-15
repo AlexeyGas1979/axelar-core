@@ -17,7 +17,7 @@ var _ types.QueryServiceServer = Keeper{}
 func (k Keeper) TransfersForChain(c context.Context, req *types.TransfersForChainRequest) (*types.TransfersForChainResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	chain, ok := k.GetChain(ctx, req.Chain)
+	chain, ok := k.GetChain(ctx, nexus.ChainName(req.Chain))
 	if !ok {
 		return nil, sdkerrors.Wrapf(types.ErrNexus, "%s is not a registered chain", req.Chain)
 	}
@@ -34,12 +34,12 @@ func (k Keeper) TransfersForChain(c context.Context, req *types.TransfersForChai
 func (k Keeper) LatestDepositAddress(c context.Context, req *types.LatestDepositAddressRequest) (*types.LatestDepositAddressResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	recipientChain, ok := k.GetChain(ctx, req.RecipientChain)
+	recipientChain, ok := k.GetChain(ctx, nexus.ChainName(req.RecipientChain))
 	if !ok {
 		return nil, sdkerrors.Wrapf(types.ErrNexus, "%s is not a registered chain", req.RecipientChain)
 	}
 
-	depositChain, ok := k.GetChain(ctx, req.DepositChain)
+	depositChain, ok := k.GetChain(ctx, nexus.ChainName(req.DepositChain))
 	if !ok {
 		return nil, sdkerrors.Wrapf(types.ErrNexus, "%s is not a registered chain", req.DepositChain)
 	}
@@ -57,7 +57,7 @@ func (k Keeper) LatestDepositAddress(c context.Context, req *types.LatestDeposit
 func (k Keeper) FeeInfo(c context.Context, req *types.FeeInfoRequest) (*types.FeeInfoResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	chain, ok := k.GetChain(ctx, req.Chain)
+	chain, ok := k.GetChain(ctx, nexus.ChainName(req.Chain))
 	if !ok {
 		return nil, sdkerrors.Wrapf(types.ErrNexus, "%s is not a registered chain", req.Chain)
 	}
@@ -78,12 +78,12 @@ func (k Keeper) FeeInfo(c context.Context, req *types.FeeInfoRequest) (*types.Fe
 func (k Keeper) TransferFee(c context.Context, req *types.TransferFeeRequest) (*types.TransferFeeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	sourceChain, ok := k.GetChain(ctx, req.SourceChain)
+	sourceChain, ok := k.GetChain(ctx, nexus.ChainName(req.SourceChain))
 	if !ok {
 		return nil, sdkerrors.Wrapf(types.ErrNexus, "%s is not a registered chain", req.SourceChain)
 	}
 
-	destinationChain, ok := k.GetChain(ctx, req.DestinationChain)
+	destinationChain, ok := k.GetChain(ctx, nexus.ChainName(req.DestinationChain))
 	if !ok {
 		return nil, sdkerrors.Wrapf(types.ErrNexus, "%s is not a registered chain", req.DestinationChain)
 	}
@@ -119,7 +119,7 @@ func (k Keeper) Chains(c context.Context, req *types.ChainsRequest) (*types.Chai
 
 	chains := k.GetChains(ctx)
 
-	chainNames := make([]string, len(chains))
+	chainNames := make([]nexus.ChainName, len(chains))
 	for i, chain := range chains {
 		chainNames[i] = chain.Name
 	}
@@ -131,7 +131,7 @@ func (k Keeper) Chains(c context.Context, req *types.ChainsRequest) (*types.Chai
 func (k Keeper) Assets(c context.Context, req *types.AssetsRequest) (*types.AssetsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	chain, ok := k.GetChain(ctx, req.Chain)
+	chain, ok := k.GetChain(ctx, nexus.ChainName(req.Chain))
 	if !ok {
 		return nil, fmt.Errorf("chain %s not found", req.Chain)
 	}
@@ -153,7 +153,7 @@ func (k Keeper) Assets(c context.Context, req *types.AssetsRequest) (*types.Asse
 func (k Keeper) ChainState(c context.Context, req *types.ChainStateRequest) (*types.ChainStateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	chain, ok := k.GetChain(ctx, req.Chain)
+	chain, ok := k.GetChain(ctx, nexus.ChainName(req.Chain))
 	if !ok {
 		return nil, fmt.Errorf("chain %s not found", req.Chain)
 	}
@@ -175,7 +175,7 @@ func (k Keeper) ChainsByAsset(c context.Context, req *types.ChainsByAssetRequest
 	}
 
 	chains := k.GetChains(ctx)
-	chainNames := []string{}
+	var chainNames []nexus.ChainName
 
 	for _, chain := range chains {
 		if k.IsAssetRegistered(ctx, chain, req.Asset) {

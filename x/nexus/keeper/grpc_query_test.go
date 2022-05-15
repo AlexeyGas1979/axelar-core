@@ -97,7 +97,7 @@ func TestKeeper_TransfersForChain(t *testing.T) {
 		When("TransferForChain is called", func() {
 			var err error
 			response, err = k.TransfersForChain(sdk.WrapSDKContext(ctx), &types.TransfersForChainRequest{
-				Chain:      axelarnet.Axelarnet.Name,
+				Chain:      axelarnet.Axelarnet.Name.String(),
 				State:      exported.Pending,
 				Pagination: pageRequest,
 			})
