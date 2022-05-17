@@ -14,6 +14,7 @@ import (
 	"github.com/axelarnetwork/axelar-core/utils"
 	"github.com/axelarnetwork/axelar-core/x/vote/exported"
 	"github.com/axelarnetwork/axelar-core/x/vote/types"
+	"github.com/axelarnetwork/utils/slices"
 )
 
 var (
@@ -124,6 +125,13 @@ func (k Keeper) getPollMetadata(ctx sdk.Context, pollKey exported.PollKey) (expo
 }
 
 func (k Keeper) getNonPendingPollMetadatas(ctx sdk.Context) []exported.PollMetadata {
+	return slices.Filter(
+		k.getPollMetadatas(ctx),
+		func(metadata exported.PollMetadata) bool { return !metadata.Is(exported.Pending) },
+	)
+}
+
+func (k Keeper) getPollMetadatas(ctx sdk.Context) []exported.PollMetadata {
 	var pollMetadatas []exported.PollMetadata
 
 	iter := k.getKVStore(ctx).Iterator(pollPrefix)
@@ -132,10 +140,7 @@ func (k Keeper) getNonPendingPollMetadatas(ctx sdk.Context) []exported.PollMetad
 	for ; iter.Valid(); iter.Next() {
 		var pollMetadata exported.PollMetadata
 		k.cdc.MustUnmarshalLengthPrefixed(iter.Value(), &pollMetadata)
-
-		if !pollMetadata.Is(exported.Pending) {
-			pollMetadatas = append(pollMetadatas, pollMetadata)
-		}
+		pollMetadatas = append(pollMetadatas, pollMetadata)
 	}
 
 	return pollMetadatas
